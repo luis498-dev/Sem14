@@ -1,0 +1,80 @@
+
+import random
+import time
+
+PI_REAL = 3.14159
+
+
+def algoritmo_monte_carlo(N):
+    dentro = 0
+
+    inicio = time.perf_counter()
+
+    for i in range(N):
+        x = random.uniform(-0.5, 0.5)
+        y = random.uniform(-0.5, 0.5)
+
+        if x*x + y*y <= 0.25:
+            dentro += 1
+
+    pi = 4 * dentro / N
+
+    fin = time.perf_counter()
+
+    error = abs(PI_REAL - pi)
+    duracion = fin - inicio
+
+    return pi, error, duracion
+
+
+def algoritmo_las_vegas(K):
+    dentro = 0
+    generados = 0
+
+    inicio = time.perf_counter()
+
+    while dentro != K:
+        x = random.uniform(-0.5, 0.5)
+        y = random.uniform(-0.5, 0.5)
+
+        generados += 1
+
+        if x*x + y*y <= 0.25:
+            dentro += 1
+
+    pi = 4 * dentro / generados
+
+    fin = time.perf_counter()
+
+    error = abs(PI_REAL - pi)
+    duracion = fin - inicio
+
+    return pi, error, duracion, generados
+
+
+# Valores que se utilizaran en las pruebas
+lista_N = [1000, 10000, 100000, 500000]
+lista_K = [1000, 10000, 100000, 500000]
+
+
+print("===== RESULTADOS MONTE CARLO =====")
+
+for N in lista_N:
+    resultado, error, tiempo = algoritmo_monte_carlo(N)
+
+    print("\nCantidad de puntos:", N)
+    print("Valor aproximado de PI:", resultado)
+    print("Error obtenido:", error)
+    print("Tiempo de ejecucion:", tiempo, "segundos")
+
+
+print("\n===== RESULTADOS LAS VEGAS =====")
+
+for K in lista_K:
+    resultado, error, tiempo, generados = algoritmo_las_vegas(K)
+
+    print("\nPuntos dentro del circulo:", K)
+    print("Puntos generados en total:", generados)
+    print("Valor aproximado de PI:", resultado)
+    print("Error obtenido:", error)
+    print("Tiempo de ejecucion:", tiempo, "segundos")
